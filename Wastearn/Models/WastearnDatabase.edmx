@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="WastearnModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Registration">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ContactNumber" Type="numeric" Precision="18" Scale="0" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="50" />
+          <Property Name="MPIN" Type="numeric" Precision="6" Scale="0" />
+          <Property Name="CreatedOn" Type="datetime" />
+          <Property Name="ResidenceId" Type="bigint" />
+          <Property Name="isVisible" Type="bit" />
+        </EntityType>
+        <EntityType Name="Requests">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="residentid" Type="bigint" Nullable="false" />
+          <Property Name="requestedOn" Type="datetime" />
+          <Property Name="status" Type="varchar" MaxLength="10" />
+          <Property Name="completedOn" Type="datetime" />
+          <Property Name="completedBy" Type="tinyint" />
+          <Property Name="feedback" Type="nvarchar(max)" />
+          <Property Name="rating" Type="numeric" Precision="2" Scale="1" />
+          <Property Name="weight" Type="numeric" Precision="5" Scale="2" />
+        </EntityType>
+        <EntityType Name="Residence">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SocietyId" Type="bigint" />
+          <Property Name="ResidenceNumber" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Society">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SocietyName" Type="nvarchar(max)" />
+        </EntityType>
+        <Association Name="FK_Registration_Residence">
+          <End Role="Residence" Type="Self.Residence" Multiplicity="0..1" />
+          <End Role="Registration" Type="Self.Registration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Residence">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Registration">
+              <PropertyRef Name="ResidenceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Residence_Residence">
+          <End Role="Residence" Type="Self.Residence" Multiplicity="0..1" />
+          <End Role="Residence1" Type="Self.Residence" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Residence">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Residence1">
+              <PropertyRef Name="SocietyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="WastearnModelStoreContainer">
+          <EntitySet Name="Registration" EntityType="Self.Registration" Schema="Wastearn_SA" store:Type="Tables" />
+          <EntitySet Name="Requests" EntityType="Self.Requests" Schema="Wastearn_SA" store:Type="Tables" />
+          <EntitySet Name="Residence" EntityType="Self.Residence" Schema="Wastearn_SA" store:Type="Tables" />
+          <EntitySet Name="Society" EntityType="Self.Society" Schema="Wastearn_SA" store:Type="Tables" />
+          <AssociationSet Name="FK_Registration_Residence" Association="Self.FK_Registration_Residence">
+            <End Role="Residence" EntitySet="Residence" />
+            <End Role="Registration" EntitySet="Registration" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Residence_Residence" Association="Self.FK_Residence_Residence">
+            <End Role="Residence" EntitySet="Residence" />
+            <End Role="Residence1" EntitySet="Residence" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="WastearnModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Registration">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ContactNumber" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MPIN" Type="Decimal" Precision="6" Scale="0" />
+          <Property Name="CreatedOn" Type="DateTime" Precision="3" />
+          <Property Name="ResidenceId" Type="Int64" />
+          <Property Name="isVisible" Type="Boolean" />
+          <NavigationProperty Name="Residence" Relationship="Self.FK_Registration_Residence" FromRole="Registration" ToRole="Residence" />
+        </EntityType>
+        <EntityType Name="Request">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="residentid" Type="Int64" Nullable="false" />
+          <Property Name="requestedOn" Type="DateTime" Precision="3" />
+          <Property Name="status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="completedOn" Type="DateTime" Precision="3" />
+          <Property Name="completedBy" Type="Byte" />
+          <Property Name="feedback" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="rating" Type="Decimal" Precision="2" Scale="1" />
+          <Property Name="weight" Type="Decimal" Precision="5" Scale="2" />
+        </EntityType>
+        <EntityType Name="Residence">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SocietyId" Type="Int64" />
+          <Property Name="ResidenceNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Registrations" Relationship="Self.FK_Registration_Residence" FromRole="Residence" ToRole="Registration" />
+          <NavigationProperty Name="Residence1" Relationship="Self.FK_Residence_Residence" FromRole="Residence" ToRole="Residence1" />
+          <NavigationProperty Name="Residence2" Relationship="Self.FK_Residence_Residence" FromRole="Residence1" ToRole="Residence" />
+        </EntityType>
+        <EntityType Name="Society">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SocietyName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_Registration_Residence">
+          <End Role="Residence" Type="Self.Residence" Multiplicity="0..1" />
+          <End Role="Registration" Type="Self.Registration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Residence">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Registration">
+              <PropertyRef Name="ResidenceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Residence_Residence">
+          <End Role="Residence" Type="Self.Residence" Multiplicity="0..1" />
+          <End Role="Residence1" Type="Self.Residence" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Residence">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Residence1">
+              <PropertyRef Name="SocietyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="WastearnEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Registrations" EntityType="Self.Registration" />
+          <EntitySet Name="Requests" EntityType="Self.Request" />
+          <EntitySet Name="Residences" EntityType="Self.Residence" />
+          <EntitySet Name="Societies" EntityType="Self.Society" />
+          <AssociationSet Name="FK_Registration_Residence" Association="Self.FK_Registration_Residence">
+            <End Role="Residence" EntitySet="Residences" />
+            <End Role="Registration" EntitySet="Registrations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Residence_Residence" Association="Self.FK_Residence_Residence">
+            <End Role="Residence" EntitySet="Residences" />
+            <End Role="Residence1" EntitySet="Residences" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="WastearnModelStoreContainer" CdmEntityContainer="WastearnEntities">
+          <EntitySetMapping Name="Registrations">
+            <EntityTypeMapping TypeName="WastearnModel.Registration">
+              <MappingFragment StoreEntitySet="Registration">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ContactNumber" ColumnName="ContactNumber" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="MPIN" ColumnName="MPIN" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="ResidenceId" ColumnName="ResidenceId" />
+                <ScalarProperty Name="isVisible" ColumnName="isVisible" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Requests">
+            <EntityTypeMapping TypeName="WastearnModel.Request">
+              <MappingFragment StoreEntitySet="Requests">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="residentid" ColumnName="residentid" />
+                <ScalarProperty Name="requestedOn" ColumnName="requestedOn" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="completedOn" ColumnName="completedOn" />
+                <ScalarProperty Name="completedBy" ColumnName="completedBy" />
+                <ScalarProperty Name="feedback" ColumnName="feedback" />
+                <ScalarProperty Name="rating" ColumnName="rating" />
+                <ScalarProperty Name="weight" ColumnName="weight" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Residences">
+            <EntityTypeMapping TypeName="WastearnModel.Residence">
+              <MappingFragment StoreEntitySet="Residence">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="SocietyId" ColumnName="SocietyId" />
+                <ScalarProperty Name="ResidenceNumber" ColumnName="ResidenceNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Societies">
+            <EntityTypeMapping TypeName="WastearnModel.Society">
+              <MappingFragment StoreEntitySet="Society">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="SocietyName" ColumnName="SocietyName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
