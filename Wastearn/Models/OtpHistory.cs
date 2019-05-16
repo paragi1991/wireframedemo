@@ -12,19 +12,13 @@ namespace Wastearn.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Registration
+    public partial class OtpHistory
     {
         public long Id { get; set; }
         public string ContactNumber { get; set; }
-        public string UserName { get; set; }
-        public Nullable<int> MPIN { get; set; }
-        public Nullable<System.DateTime> CreatedOn { get; set; }
-        public Nullable<long> ResidenceId { get; set; }
-        public Nullable<bool> isVisible { get; set; }
-        public Nullable<long> SocietyId { get; set; }
-        public Nullable<bool> IsOtpVerified { get; set; }
-    
-        public virtual Residence Residence { get; set; }
-        public virtual Society Society { get; set; }
+        public string Otp { get; set; }
+        public Nullable<bool> IsVerified { get; set; }
+        public Nullable<System.DateTime> OtpExpired { get; set; }
+        public Nullable<System.DateTime> VerifiedTime { get; set; }
     }
 }

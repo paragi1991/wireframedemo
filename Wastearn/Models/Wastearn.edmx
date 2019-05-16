@@ -5,17 +5,30 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
       <Schema Namespace="WastearnModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="OtpHistory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ContactNumber" Type="varchar" MaxLength="50" />
+          <Property Name="Otp" Type="varchar" MaxLength="50" />
+          <Property Name="IsVerified" Type="bit" />
+          <Property Name="OtpExpired" Type="datetime" />
+          <Property Name="VerifiedTime" Type="datetime" />
+        </EntityType>
         <EntityType Name="Registration">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ContactNumber" Type="numeric" Precision="18" Scale="0" />
+          <Property Name="ContactNumber" Type="varchar" MaxLength="50" />
           <Property Name="UserName" Type="nvarchar" MaxLength="50" />
-          <Property Name="MPIN" Type="numeric" Precision="6" Scale="0" />
+          <Property Name="MPIN" Type="int" />
           <Property Name="CreatedOn" Type="datetime" />
           <Property Name="ResidenceId" Type="bigint" />
           <Property Name="isVisible" Type="bit" />
+          <Property Name="SocietyId" Type="bigint" />
+          <Property Name="IsOtpVerified" Type="bit" />
         </EntityType>
         <EntityType Name="Requests">
           <Key>
@@ -39,12 +52,12 @@
           <Property Name="SocietyId" Type="bigint" />
           <Property Name="ResidenceNumber" Type="nvarchar" MaxLength="50" />
         </EntityType>
-        <EntityType Name="Society">
+        <EntityType Name="Societies">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="SocietyName" Type="nvarchar(max)" />
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SocietyName" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <Association Name="FK_Registration_Residence">
           <End Role="Residence" Type="Self.Residence" Multiplicity="0..1" />
@@ -58,30 +71,47 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Residence_Residence">
-          <End Role="Residence" Type="Self.Residence" Multiplicity="0..1" />
-          <End Role="Residence1" Type="Self.Residence" Multiplicity="*" />
+        <Association Name="FK_Registration_Societies">
+          <End Role="Societies" Type="Self.Societies" Multiplicity="0..1" />
+          <End Role="Registration" Type="Self.Registration" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Residence">
+            <Principal Role="Societies">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Residence1">
+            <Dependent Role="Registration">
+              <PropertyRef Name="SocietyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Residence_Residence">
+          <End Role="Societies" Type="Self.Societies" Multiplicity="0..1" />
+          <End Role="Residence" Type="Self.Residence" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Societies">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Residence">
               <PropertyRef Name="SocietyId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="WastearnModelStoreContainer">
+          <EntitySet Name="OtpHistory" EntityType="Self.OtpHistory" Schema="Wastearn_SA" store:Type="Tables" />
           <EntitySet Name="Registration" EntityType="Self.Registration" Schema="Wastearn_SA" store:Type="Tables" />
           <EntitySet Name="Requests" EntityType="Self.Requests" Schema="Wastearn_SA" store:Type="Tables" />
           <EntitySet Name="Residence" EntityType="Self.Residence" Schema="Wastearn_SA" store:Type="Tables" />
-          <EntitySet Name="Society" EntityType="Self.Society" Schema="Wastearn_SA" store:Type="Tables" />
+          <EntitySet Name="Societies" EntityType="Self.Societies" Schema="Wastearn_SA" store:Type="Tables" />
           <AssociationSet Name="FK_Registration_Residence" Association="Self.FK_Registration_Residence">
             <End Role="Residence" EntitySet="Residence" />
             <End Role="Registration" EntitySet="Registration" />
           </AssociationSet>
+          <AssociationSet Name="FK_Registration_Societies" Association="Self.FK_Registration_Societies">
+            <End Role="Societies" EntitySet="Societies" />
+            <End Role="Registration" EntitySet="Registration" />
+          </AssociationSet>
           <AssociationSet Name="FK_Residence_Residence" Association="Self.FK_Residence_Residence">
+            <End Role="Societies" EntitySet="Societies" />
             <End Role="Residence" EntitySet="Residence" />
-            <End Role="Residence1" EntitySet="Residence" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -89,18 +119,32 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="WastearnModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="OtpHistory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ContactNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Otp" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IsVerified" Type="Boolean" />
+          <Property Name="OtpExpired" Type="DateTime" Precision="3" />
+          <Property Name="VerifiedTime" Type="DateTime" Precision="3" />
+        </EntityType>
         <EntityType Name="Registration">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ContactNumber" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="ContactNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="MPIN" Type="Decimal" Precision="6" Scale="0" />
+          <Property Name="MPIN" Type="Int32" />
           <Property Name="CreatedOn" Type="DateTime" Precision="3" />
           <Property Name="ResidenceId" Type="Int64" />
           <Property Name="isVisible" Type="Boolean" />
+          <Property Name="SocietyId" Type="Int64" />
+          <Property Name="IsOtpVerified" Type="Boolean" />
           <NavigationProperty Name="Residence" Relationship="Self.FK_Registration_Residence" FromRole="Registration" ToRole="Residence" />
+          <NavigationProperty Name="Society" Relationship="Self.FK_Registration_Societies" FromRole="Registration" ToRole="Societies" />
         </EntityType>
         <EntityType Name="Request">
           <Key>
@@ -124,15 +168,16 @@
           <Property Name="SocietyId" Type="Int64" />
           <Property Name="ResidenceNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Registrations" Relationship="Self.FK_Registration_Residence" FromRole="Residence" ToRole="Registration" />
-          <NavigationProperty Name="Residence1" Relationship="Self.FK_Residence_Residence" FromRole="Residence" ToRole="Residence1" />
-          <NavigationProperty Name="Residence2" Relationship="Self.FK_Residence_Residence" FromRole="Residence1" ToRole="Residence" />
+          <NavigationProperty Name="Society" Relationship="Self.FK_Residence_Residence" FromRole="Residence" ToRole="Societies" />
         </EntityType>
         <EntityType Name="Society">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SocietyName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SocietyName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Registrations" Relationship="Self.FK_Registration_Societies" FromRole="Societies" ToRole="Registration" />
+          <NavigationProperty Name="Residences" Relationship="Self.FK_Residence_Residence" FromRole="Societies" ToRole="Residence" />
         </EntityType>
         <Association Name="FK_Registration_Residence">
           <End Role="Residence" Type="Self.Residence" Multiplicity="0..1" />
@@ -146,19 +191,32 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Residence_Residence">
-          <End Role="Residence" Type="Self.Residence" Multiplicity="0..1" />
-          <End Role="Residence1" Type="Self.Residence" Multiplicity="*" />
+        <Association Name="FK_Registration_Societies">
+          <End Role="Societies" Type="Self.Society" Multiplicity="0..1" />
+          <End Role="Registration" Type="Self.Registration" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Residence">
+            <Principal Role="Societies">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Residence1">
+            <Dependent Role="Registration">
+              <PropertyRef Name="SocietyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Residence_Residence">
+          <End Role="Societies" Type="Self.Society" Multiplicity="0..1" />
+          <End Role="Residence" Type="Self.Residence" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Societies">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Residence">
               <PropertyRef Name="SocietyId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="WastearnEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="OtpHistories" EntityType="Self.OtpHistory" />
           <EntitySet Name="Registrations" EntityType="Self.Registration" />
           <EntitySet Name="Requests" EntityType="Self.Request" />
           <EntitySet Name="Residences" EntityType="Self.Residence" />
@@ -167,9 +225,13 @@
             <End Role="Residence" EntitySet="Residences" />
             <End Role="Registration" EntitySet="Registrations" />
           </AssociationSet>
+          <AssociationSet Name="FK_Registration_Societies" Association="Self.FK_Registration_Societies">
+            <End Role="Societies" EntitySet="Societies" />
+            <End Role="Registration" EntitySet="Registrations" />
+          </AssociationSet>
           <AssociationSet Name="FK_Residence_Residence" Association="Self.FK_Residence_Residence">
+            <End Role="Societies" EntitySet="Societies" />
             <End Role="Residence" EntitySet="Residences" />
-            <End Role="Residence1" EntitySet="Residences" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -178,6 +240,18 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="WastearnModelStoreContainer" CdmEntityContainer="WastearnEntities">
+          <EntitySetMapping Name="OtpHistories">
+            <EntityTypeMapping TypeName="WastearnModel.OtpHistory">
+              <MappingFragment StoreEntitySet="OtpHistory">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ContactNumber" ColumnName="ContactNumber" />
+                <ScalarProperty Name="Otp" ColumnName="Otp" />
+                <ScalarProperty Name="IsVerified" ColumnName="IsVerified" />
+                <ScalarProperty Name="OtpExpired" ColumnName="OtpExpired" />
+                <ScalarProperty Name="VerifiedTime" ColumnName="VerifiedTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Registrations">
             <EntityTypeMapping TypeName="WastearnModel.Registration">
               <MappingFragment StoreEntitySet="Registration">
@@ -188,6 +262,8 @@
                 <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
                 <ScalarProperty Name="ResidenceId" ColumnName="ResidenceId" />
                 <ScalarProperty Name="isVisible" ColumnName="isVisible" />
+                <ScalarProperty Name="SocietyId" ColumnName="SocietyId" />
+                <ScalarProperty Name="IsOtpVerified" ColumnName="IsOtpVerified" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -217,7 +293,7 @@
           </EntitySetMapping>
           <EntitySetMapping Name="Societies">
             <EntityTypeMapping TypeName="WastearnModel.Society">
-              <MappingFragment StoreEntitySet="Society">
+              <MappingFragment StoreEntitySet="Societies">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="SocietyName" ColumnName="SocietyName" />
               </MappingFragment>

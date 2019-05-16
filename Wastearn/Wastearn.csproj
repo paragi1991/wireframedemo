@@ -167,32 +167,35 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\OtpHistory.cs">
+      <DependentUpon>Wastearn.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Registration.cs">
-      <DependentUpon>WastearnDatabase.tt</DependentUpon>
+      <DependentUpon>Wastearn.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Request.cs">
-      <DependentUpon>WastearnDatabase.tt</DependentUpon>
+      <DependentUpon>Wastearn.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Residence.cs">
-      <DependentUpon>WastearnDatabase.tt</DependentUpon>
+      <DependentUpon>Wastearn.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Society.cs">
-      <DependentUpon>WastearnDatabase.tt</DependentUpon>
+      <DependentUpon>Wastearn.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\WastearnDatabase.Context.cs">
+    <Compile Include="Models\Wastearn.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>WastearnDatabase.Context.tt</DependentUpon>
+      <DependentUpon>Wastearn.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\WastearnDatabase.cs">
+    <Compile Include="Models\Wastearn.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>WastearnDatabase.tt</DependentUpon>
+      <DependentUpon>Wastearn.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\WastearnDatabase.Designer.cs">
+    <Compile Include="Models\Wastearn.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>WastearnDatabase.edmx</DependentUpon>
+      <DependentUpon>Wastearn.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\RegistrationViewModel.cs" />
@@ -206,15 +209,15 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Models\WastearnDatabase.Context.tt">
+    <Content Include="Models\Wastearn.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>WastearnDatabase.edmx</DependentUpon>
-      <LastGenOutput>WastearnDatabase.Context.cs</LastGenOutput>
+      <DependentUpon>Wastearn.edmx</DependentUpon>
+      <LastGenOutput>Wastearn.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Models\WastearnDatabase.tt">
+    <Content Include="Models\Wastearn.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>WastearnDatabase.edmx</DependentUpon>
-      <LastGenOutput>WastearnDatabase.cs</LastGenOutput>
+      <DependentUpon>Wastearn.edmx</DependentUpon>
+      <LastGenOutput>Wastearn.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -237,12 +240,12 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
-    <EntityDeploy Include="Models\WastearnDatabase.edmx">
+    <EntityDeploy Include="Models\Wastearn.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>WastearnDatabase.Designer.cs</LastGenOutput>
+      <LastGenOutput>Wastearn.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="Models\WastearnDatabase.edmx.diagram">
-      <DependentUpon>WastearnDatabase.edmx</DependentUpon>
+    <Content Include="Models\Wastearn.edmx.diagram">
+      <DependentUpon>Wastearn.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

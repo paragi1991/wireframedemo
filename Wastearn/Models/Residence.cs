@@ -18,7 +18,6 @@ namespace Wastearn.Models
         public Residence()
         {
             this.Registrations = new HashSet<Registration>();
-            this.Residence1 = new HashSet<Residence>();
         }
     
         public long Id { get; set; }
@@ -27,8 +26,6 @@ namespace Wastearn.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Registration> Registrations { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Residence> Residence1 { get; set; }
-        public virtual Residence Residence2 { get; set; }
+        public virtual Society Society { get; set; }
     }
 }

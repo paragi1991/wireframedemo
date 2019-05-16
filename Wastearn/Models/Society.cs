@@ -14,7 +14,19 @@ namespace Wastearn.Models
     
     public partial class Society
     {
-        public short Id { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Society()
+        {
+            this.Registrations = new HashSet<Registration>();
+            this.Residences = new HashSet<Residence>();
+        }
+    
+        public long Id { get; set; }
         public string SocietyName { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Registration> Registrations { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Residence> Residences { get; set; }
     }
 }

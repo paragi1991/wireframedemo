@@ -15,21 +15,28 @@ namespace Wastearn.ViewModel
     {
         public int SelectedSociety { get; set; }
         public int SelectedResidence { get; set; }
-        public Int64 ContactNumber { get; set; }
+        public string ContactNumber { get; set; }
     }
 
 
     public class OTPVerificationViewModel
     {     
-        public Int64 ContactNumber { get; set; }
+        public string ContactNumber { get; set; }
 
         public string OTP { get; set; }
     }
 
     public class MPINViewModel
     {
-        public Int64 ContactNumber { get; set; }
+        public string ContactNumber { get; set; }
 
-        public decimal? MPIN { get; set; }
+        public int? MPIN { get; set; }
     }
+
+    public class LoginViewModel
+    {
+        public string ContactNumber { get; set; }
+        public int MPIN { get; set; }
+    }
+
 }

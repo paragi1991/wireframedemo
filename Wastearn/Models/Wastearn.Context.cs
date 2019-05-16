@@ -25,6 +25,7 @@ namespace Wastearn.Models
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<OtpHistory> OtpHistories { get; set; }
         public virtual DbSet<Registration> Registrations { get; set; }
         public virtual DbSet<Request> Requests { get; set; }
         public virtual DbSet<Residence> Residences { get; set; }
