@@ -39,4 +39,34 @@ namespace Wastearn.ViewModel
         public int MPIN { get; set; }
     }
 
+    public class RequestViewModel
+    {
+        public long residenceId { get; set; }
+      
+    }
+
+    public class RequestProcessViewModel
+    {
+        public long residenceId { get; set; }
+        public string status { get; set; }
+
+        public string ContactNumber { get; set; }
+    }
+
+    public class ReviewRequestModel
+    {
+        public long residenceId { get; set; }
+        public string feedback { get; set; }
+        public decimal weight { get; set; }
+        public decimal rating { get; set; }
+
+    }
+
+
+    public enum RequestStatus
+    {
+        Requested = 0,
+        Accepted =1 ,
+        Rejected = 2
+    }
 }

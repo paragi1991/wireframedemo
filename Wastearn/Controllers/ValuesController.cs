@@ -22,7 +22,8 @@ namespace Wastearn.Controllers
             Registration registration = new Registration
             {
                 ResidenceId = registrationViewModel.SelectedResidence,
-                SocietyId = registrationViewModel.SelectedSociety
+                SocietyId = registrationViewModel.SelectedSociety,
+                CreatedOn = DateTime.Now
             };
             _db.Registrations.Add(registration);
             _db.SaveChanges();
@@ -65,7 +66,7 @@ namespace Wastearn.Controllers
                 {
                     HttpResponseMessage associatedResponse = Request.CreateResponse(HttpStatusCode.OK, "Alreday Associated this number");
                     return associatedResponse;
-                }               
+                }
 
             }
             else
@@ -111,15 +112,15 @@ namespace Wastearn.Controllers
 
             if (dataExists != null)
             {
-                if(dataExists.OtpExpired >= DateTime.Now)
+                if (dataExists.OtpExpired >= DateTime.Now)
                 {
-                    if(dataExists.Otp == otpVerificationViewModel.OTP)
+                    if (dataExists.Otp == otpVerificationViewModel.OTP)
                     {
                         dataExists.IsVerified = true;
                         dataExists.VerifiedTime = DateTime.Now;
                     }
                     var masterData = _db.Registrations.Where(s => s.ContactNumber == otpVerificationViewModel.ContactNumber).FirstOrDefault();
-                    if(masterData != null)
+                    if (masterData != null)
                     {
                         masterData.IsOtpVerified = true;
                     }
@@ -160,17 +161,107 @@ namespace Wastearn.Controllers
 
             if (dataExists != null)
             {
-             return Request.CreateResponse(HttpStatusCode.OK,"Login success");
+                return Request.CreateResponse(HttpStatusCode.OK, "Login success");
             }
-           
+
             return Request.CreateResponse(HttpStatusCode.BadRequest, "Authentication Fail"); ;
         }
-       
+        [Route("pickuprequest")]
+        [HttpPost]
+        public HttpResponseMessage PickUpRequest([FromBody]RequestViewModel requestViewModel)
+        {
+            var dataExists = _db.Registrations.Where(s => s.ResidenceId == requestViewModel.residenceId).FirstOrDefault();
+
+            if (dataExists != null)
+            {
+                var requstedExists = _db.Requests.Where(s => s.residentid == requestViewModel.residenceId && s.status == Convert.ToString(RequestStatus.Requested)).FirstOrDefault();
+
+                if (requstedExists == null)
+                {
+                    Request request = new Request
+                    {
+                        residentid = requestViewModel.residenceId,
+                        requestedOn = DateTime.Now,
+                        status = RequestStatus.Requested.ToString()
+
+                    };
+                    _db.Requests.Add(request);
+                }
+                else
+                {
+                    requstedExists.requestedOn = DateTime.Now;
+                }
+                _db.SaveChanges();
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Residence information not found in system"); ;
+
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, "Request has been put successfully");
+        }
+
+        [Route("requestprocess")]
+        [HttpPost]
+        public HttpResponseMessage RequestProcess([FromBody]RequestProcessViewModel requestProcessViewModel)
+        {
+            var dataExists = _db.Registrations.Where(s => s.ResidenceId == requestProcessViewModel.residenceId && s.ContactNumber == requestProcessViewModel.ContactNumber).FirstOrDefault();
+
+            if (dataExists != null)
+            {
+
+                var requstedExists = _db.Requests.Where(s => s.residentid == requestProcessViewModel.residenceId && s.status == Convert.ToString(RequestStatus.Requested)).FirstOrDefault();
+                if (requstedExists != null)
+                {
+                    if (requstedExists.status == RequestStatus.Accepted.ToString())
+                    {
+                        requstedExists.status = requestProcessViewModel.status;
+                        requstedExists.completedBy = 1;// TODO Needs to be dynamic
+                        requstedExists.completedOn = DateTime.Now;
+                    }
+                    requstedExists.status = requestProcessViewModel.status;
+                    _db.SaveChanges();
+                }
+                else
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "There is no pending request"); ;
+
+                }
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Residence information not found in system"); ;
+
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, "Request has been successfully process");
+        }
+        [Route("reviewrequest")]
+        [HttpPost]
+        public HttpResponseMessage ReviewRequest([FromBody]ReviewRequestModel reviewRequestModel)
+        {
+            var requstedExists = _db.Requests.Where(s => s.residentid == reviewRequestModel.residenceId && s.status == Convert.ToString(RequestStatus.Accepted)).OrderByDescending(i => i.requestedOn).FirstOrDefault();
+            if (requstedExists != null && requstedExists.rating == 0)
+            {
+
+                requstedExists.feedback = reviewRequestModel.feedback;
+                requstedExists.weight = reviewRequestModel.weight;
+                requstedExists.rating = reviewRequestModel.rating;
+                _db.SaveChanges();
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "There is no pending request"); ;
+
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, "Review has been submitted successfully"); ;
+        }
         private string GenerateRandomOTP()
 
         {
             string[] saAllowedCharacters = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" };
-           int iOTPLength = 8;
+            int iOTPLength = 8;
 
             string sOTP = String.Empty;
 
