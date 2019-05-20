@@ -257,6 +257,20 @@ namespace Wastearn.Controllers
             }
             return Request.CreateResponse(HttpStatusCode.OK, "Review has been submitted successfully"); ;
         }
+        [Route("societies")]
+        [HttpGet]
+        public HttpResponseMessage getSocieties()
+        {
+            var societyData = _db.Society.ToList();          
+            return Request.CreateResponse(HttpStatusCode.OK, societyData); ;
+        }
+        [Route("residence/{societyid}")]
+        [HttpGet]
+        public HttpResponseMessage getResidenceBySociety(int societyid)
+        {
+            var selectedData = _db.Residence.Where(s => s.SocietyId == societyid).ToList();
+            return Request.CreateResponse(HttpStatusCode.OK, selectedData); ;
+        }
         private string GenerateRandomOTP()
 
         {
