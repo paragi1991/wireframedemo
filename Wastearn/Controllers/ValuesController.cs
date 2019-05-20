@@ -296,6 +296,16 @@ namespace Wastearn.Controllers
             }
             return Request.CreateResponse(HttpStatusCode.OK, residenceResponseModel); ;
         }
+
+        [Route("requeststatus")]
+        [HttpGet]
+        public HttpResponseMessage getAllRequestDetailForRequested()
+        {
+
+            var selectedData = _db.Requests.Where(s => s.status == RequestStatus.Requested.ToString()).ToList();
+          
+            return Request.CreateResponse(HttpStatusCode.OK, selectedData);
+        }
         private string GenerateRandomOTP()
 
         {
