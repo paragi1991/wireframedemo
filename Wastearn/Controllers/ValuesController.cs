@@ -261,15 +261,40 @@ namespace Wastearn.Controllers
         [HttpGet]
         public HttpResponseMessage getSocieties()
         {
-            var societyData = _db.Society.ToList();          
-            return Request.CreateResponse(HttpStatusCode.OK, societyData); ;
+            List<SocietyResponseModel> societyResponseModel = new List<SocietyResponseModel>();
+            var societyData = _db.Societies.ToList();
+            if (societyData != null && societyData.Count > 0)
+            {
+                foreach (var item in societyData)
+                {
+                    SocietyResponseModel societyResponse = new SocietyResponseModel();
+                    societyResponse.SocietyId = item.Id;
+                    societyResponse.SocietyName = item.SocietyName;
+                    societyResponseModel.Add(societyResponse);
+                }
+
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, societyResponseModel); ;
         }
         [Route("residence/{societyid}")]
         [HttpGet]
         public HttpResponseMessage getResidenceBySociety(int societyid)
         {
-            var selectedData = _db.Residence.Where(s => s.SocietyId == societyid).ToList();
-            return Request.CreateResponse(HttpStatusCode.OK, selectedData); ;
+            List<ResidenceResponseModel> residenceResponseModel = new List<ResidenceResponseModel>();
+            var selectedData = _db.Residences.Where(s => s.SocietyId == societyid).ToList();
+            if(selectedData != null && selectedData.Count > 0)
+            {
+                foreach (var item in selectedData)
+                {
+                    ResidenceResponseModel residenceResponse = new ResidenceResponseModel();
+                    residenceResponse.SocietyId = item.SocietyId;
+                    residenceResponse.ResidenceId = item.Id;
+                    residenceResponse.ResidenceNumber = item.ResidenceNumber;
+                    residenceResponseModel.Add(residenceResponse);
+
+                }
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, residenceResponseModel); ;
         }
         private string GenerateRandomOTP()
 

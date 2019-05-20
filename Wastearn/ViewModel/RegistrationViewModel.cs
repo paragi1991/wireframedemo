@@ -62,6 +62,21 @@ namespace Wastearn.ViewModel
 
     }
 
+    public class SocietyResponseModel
+    {
+        public long SocietyId { get; set; }
+        public string SocietyName { get; set; }
+
+    }
+
+    public class ResidenceResponseModel
+    {
+        public long ResidenceId { get; set; }
+        public string ResidenceNumber { get; set; }
+        public long? SocietyId { get; set; }
+
+    }
+
 
     public enum RequestStatus
     {
